@@ -1,0 +1,14 @@
+;	STMicroelectronics Workspace file
+
+[Version]
+Keyword=ST7Workspace-V0.7
+
+[Project0]
+Filename=A1Hello\A1Hello.stp
+Dependencies=
+[Options]
+ActiveProject=A1Hello
+ActiveConfig=Debug
+AddSortedElements=0
+[Batch Build]
+Release=A1Hello

@@ -1,0 +1,11 @@
+.vscode
+
+Debug/
+Release/
+
+TAGS*.*
+*.lkf
+*.dep
+*.pdb
+*.wdb
+*.wed

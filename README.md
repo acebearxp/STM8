@@ -1,0 +1,8 @@
+# STM8
+For my STM8S105K4T6 dev-board
+![STM8S105K4T6](STM8S105K4T6.jpg)
+
++ LQFP32(7x7mm)
++ 16K Flash
++ 2K RAM
++ 1K EEPROM
