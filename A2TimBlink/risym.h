@@ -5,7 +5,7 @@
 #define LED_GPIO_PORT    (GPIOE)
 #define LED_GPIO_PIN     (GPIO_PIN_5)
 
-#ifdef __VSCODE__
+#ifdef __INTELLISENSE__
     #define _asm ___asm
 #endif
 

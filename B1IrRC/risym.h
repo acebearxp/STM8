@@ -11,10 +11,15 @@
 #define IR_GPIO_PIN     (GPIO_PIN_2)
 #define IR_GPIO_EXTI    (EXTI_PORT_GPIOC)
 
-#ifdef __VSCODE__
+#ifdef __INTELLISENSE__
     #define _asm ___asm
 #endif
 
-extern ext_ir_decoder_handler_t g_hIrDecoder;
+typedef struct _TOPMOST_DATA
+{
+    ext_ir_decoder_handler_t hIrDecoder;
+} TOPMOST_DATA_T;
+
+extern TOPMOST_DATA_T g_data;
 
 #endif

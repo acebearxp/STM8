@@ -3,7 +3,7 @@
 
 #include <stm8s.h>
 
-#ifdef __VSCODE__
+#ifdef __INTELLISENSE__
 void TIM2_UPD_IRQHandler(void);
 #else
 @far @interrupt void TIM2_UPD_IRQHandler(void);

@@ -21,6 +21,12 @@ void ext_ir_decoder_deinit(ext_ir_decoder_handler_t hIrDecoder)
     free(pdata);
 }
 
+uint8_t ext_ir_decoder_get_len(ext_ir_decoder_handler_t hIrDecoder)
+{
+    ex_ir_decoder_data_t *pdata = hIrDecoder;
+    return pdata->u8Len;
+}
+
 uint8_t ext_ir_decoder_append(ext_ir_decoder_handler_t hIrDecoder, uint16_t u16Capture)
 {
     ex_ir_decoder_data_t *pdata = hIrDecoder;
@@ -34,4 +40,16 @@ void ext_ir_decoder_clear(ext_ir_decoder_handler_t hIrDecoder)
 {
     ex_ir_decoder_data_t *pdata = hIrDecoder;
     pdata->u8Len = 0;
+}
+
+uint8_t ext_ir_decoder_decode(ext_ir_decoder_handler_t hIrDecoder)
+{
+    uint8_t u8Code = 0;
+    ex_ir_decoder_data_t *pdata = hIrDecoder;
+    if(pdata->u8Len > 0){
+        // TODO: decode
+        u8Code = pdata->u8Len;
+        pdata->u8Len = 0;
+    }
+    return u8Code;
 }

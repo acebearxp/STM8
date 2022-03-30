@@ -4,7 +4,7 @@
 
 #include "stm8s_it.h"
 
-#ifdef __VSCODE__
+#ifdef __INTELLISENSE__
 // for vscode intellisense
 typedef void /*@far*/(*interrupt_handler_t)(void);
 /*@far @interrupt*/void NonHandledInterrupt (void){}

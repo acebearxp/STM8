@@ -5,5 +5,11 @@
 // IRQ5 for EXTI2(EXTI_PORT_GPIOC)
 void EXTI2_IRQHandler(void)
 {
-    GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
+    uint16_t u16Value = TIM3_GetCounter();
+    if(u16Value > 12000){
+        TIM3_SetCounter(0);
+    }
+    else{
+        ext_ir_decoder_append(g_data.hIrDecoder, u16Value);
+    }
 }

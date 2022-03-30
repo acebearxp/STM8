@@ -3,7 +3,7 @@
 
 #include <stm8s.h>
 
-#ifdef __VSCODE__
+#ifdef __INTELLISENSE__
 void EXTI2_IRQHandler(void);
 #else
 @far @interrupt void EXTI2_IRQHandler(void);

@@ -28,7 +28,7 @@
 + 因此需要把STM8S_StdPeriph_Driver里的 stm8s_clk.c & stm8s_gpio.c 加入编译
 + 使用编译器参数指定芯片类型, 如`-dSTM8S105`
 + stm8s_conf.h由STM8S_StdPeriph_Driver的示例工程里提供,通过宏定义关闭芯片不支持的功能
-+ stm8_interrupt_vector.c 虽然没有使用中断向量,但必须提供中断向量的定义.使用`__VSCODE__`以便在vscode中屏蔽不支持的语法
++ stm8_interrupt_vector.c 虽然没有使用中断向量,但必须提供中断向量的定义.使用`__INTELLISENSE__`以便在vscode中屏蔽不支持的语法
 + *.lkf 是STM8链接器描述文件,这个文件是用STVD生成的
 
 ## Flash

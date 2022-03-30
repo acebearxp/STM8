@@ -1,7 +1,7 @@
 #include <stm8s.h>
 #include "risym.h"
 
-ext_ir_decoder_handler_t g_hIrDecoder;
+TOPMOST_DATA_T g_data;
 
 static void CLOCK_setup(void)
 {
@@ -19,19 +19,33 @@ static void GPIO_setup(void)
     EXTI_SetExtIntSensitivity(IR_GPIO_EXTI, EXTI_SENSITIVITY_RISE_FALL);
 }
 
+static void TIM3_setup(void)
+{
+    CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER3, ENABLE);
+    TIM3_TimeBaseInit(TIM3_PRESCALER_8, 0xFFFF);
+    TIM3_Cmd(ENABLE);
+}
+
 static void IrDecoder_setup(void)
 {
-    g_hIrDecoder = ext_ir_decoder_init();
+    g_data.hIrDecoder = ext_ir_decoder_init();
 }
 
 void main()
 {
     CLOCK_setup();
-    GPIO_setup();
 
     IrDecoder_setup();
 
+    GPIO_setup();
+    TIM3_setup();
+    
     enableInterrupts();
 
-    
+    while(TRUE){
+        uint8_t u8Code = ext_ir_decoder_decode(g_data.hIrDecoder);
+        if(u8Code > 0){
+            GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
+        }
+    }
 }
