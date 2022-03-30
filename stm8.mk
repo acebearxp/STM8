@@ -11,12 +11,14 @@ chex = chex
 # includes
 inc_cxstm8 = $(DEV_TOOLS_PATH)\COSMIC\FSE_Compilers\CXSTM8\Hstm8
 inc_stm8s_stdperiph_lib = ..\STM8S_StdPeriph_Driver\inc
+inc_ext = ..\STM8_Ext\inc
 # libs
 lib_cxstm8 = $(DEV_TOOLS_PATH)\COSMIC\FSE_Compilers\CXSTM8\Lib
 # src
 src_driver = ..\STM8S_StdPeriph_Driver\src
+src_ext = ..\STM8_Ext\src
 
-cflags = +mods0 -pxp -pp -l -dSTM8S105 -i$(inc_cxstm8) -i$(inc_stm8s_stdperiph_lib)
+cflags = +mods0 -pxp -pp -l -dSTM8S105 -i$(inc_cxstm8) -i$(inc_stm8s_stdperiph_lib) -i$(inc_ext)
 linkflags = -l$(lib_cxstm8)
 
 !IFNDEF DEBUG
@@ -55,6 +57,9 @@ $(output_dir)/$(target).sm8 : $(objs)
     $(link) $(linkflags) -m $(output_dir)/$(target).map -o $(output_dir)/$(target).sm8 $(lkf)
 
 {$(src_driver)}.c{$(output_dir)}.o :
+	$(cc) $(cflags) $<
+
+{$(src_ext)}.c{$(output_dir)}.o :
 	$(cc) $(cflags) $<
 
 .c{$(output_dir)}.o :

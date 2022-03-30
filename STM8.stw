@@ -6,9 +6,11 @@ Keyword=ST7Workspace-V0.7
 [Project0]
 Filename=A1Hello\A1Hello.stp
 Dependencies=
+
+[Project1]
+Filename=B1IrRC\B1IrRC.stp
+Dependencies=
 [Options]
-ActiveProject=A1Hello
+ActiveProject=B1IrRC
 ActiveConfig=Debug
 AddSortedElements=0
-[Batch Build]
-Release=A1Hello

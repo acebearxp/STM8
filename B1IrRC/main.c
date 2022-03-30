@@ -1,14 +1,13 @@
 #include <stm8s.h>
 #include "risym.h"
 
+ext_ir_decoder_handler_t g_hIrDecoder;
+
 static void CLOCK_setup(void)
 {
     CLK_HSECmd(ENABLE); // HSE@8.000MHz
-    CLK_ClockSwitchCmd(ENABLE);
     CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV8); // 1MHz
     CLK_ClockSwitchConfig(CLK_SWITCHMODE_AUTO, CLK_SOURCE_HSE, DISABLE, CLK_CURRENTCLOCKSTATE_DISABLE);
-
-    // CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, ENABLE); // TIM2
 }
 
 static void GPIO_setup(void)
@@ -20,10 +19,19 @@ static void GPIO_setup(void)
     EXTI_SetExtIntSensitivity(IR_GPIO_EXTI, EXTI_SENSITIVITY_RISE_FALL);
 }
 
+static void IrDecoder_setup(void)
+{
+    g_hIrDecoder = ext_ir_decoder_init();
+}
+
 void main()
 {
     CLOCK_setup();
     GPIO_setup();
 
+    IrDecoder_setup();
+
     enableInterrupts();
+
+    
 }
