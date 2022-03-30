@@ -43,7 +43,7 @@ cflags = $(cflags) -cl$(output_dir) -co$(output_dir)
 target : $(output_dir) $(output_dir)/$(target).s19 $(output_dir)/$(target).elf
 
 $(output_dir) : 
-	mkdir $(output_dir)
+	mkdir $(output_dir) & @echo $(output_dir)
 
 $(output_dir)/$(target).s19 : $(output_dir)/$(target).sm8
 	$(chex) -o $(output_dir)/$(target).s19 $(output_dir)/$(target).sm8
