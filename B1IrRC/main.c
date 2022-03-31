@@ -1,3 +1,7 @@
+// HSE@8.000MHz
+#define HSE_VALUE ((uint32_t)8000000)
+#define HSE_Value HSE_VALUE
+
 #include <stm8s.h>
 #include "risym.h"
 #include <stdio.h>
@@ -35,8 +39,10 @@ static void TIM3_setup(void)
 
 static void UART2_setup(void)
 {
+    // the baudrate should no more than 8MHz/16 since master clock is at 8MHz(usually 460800 max)
     CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART2, ENABLE);
-    UART2_Init(9600, UART2_WORDLENGTH_8D, UART2_STOPBITS_1,
+    UART2_DeInit();
+    UART2_Init(115200, UART2_WORDLENGTH_8D, UART2_STOPBITS_1,
         UART2_PARITY_NO, UART2_SYNCMODE_CLOCK_DISABLE, UART2_MODE_TXRX_ENABLE);
     UART2_Cmd(ENABLE);
 }
@@ -57,15 +63,15 @@ void main()
     enableInterrupts();
 
     while(TRUE){
-        char buf[256];
+        uint8_t buf[256];
         int nLen, nSent, nWait;
         uint8_t u8Code = ext_ir_decoder_decode(g_data.hIrDecoder);
         if(u8Code > 0){
             GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
-            nLen = sprintf(buf, "STM8 IrRC : %u", u8Code);
+            nLen = sprintf(buf, "STM8 IrRC Recvied %u", u8Code);
             nSent = 0, nWait = 0;
-            while(nSent < nLen+1){
-                if(UART2_GetFlagStatus(UART2_FLAG_TXE) == RESET){
+            while(nSent <= nLen+1){
+                if(UART2_GetFlagStatus(UART2_FLAG_TXE) == SET){
                     UART2_SendData8(buf[nSent]);
                     nSent++;
                     nWait = 0;
