@@ -53,7 +53,7 @@ static void IrDecoder_setup(void)
 
 void main()
 {
-    char buf[256];
+    uint16_t count = 0;
 
     CLOCK_setup();
     IrDecoder_setup();
@@ -63,16 +63,25 @@ void main()
     
     enableInterrupts();
 
-    uart_log("start...");
+    uart_log("STM8S105K4 start...");
 
     while(TRUE){
         uint8_t u8Code;
         uint16_t u16Addr;
 
         if(ext_ir_decoder_decode(g_data.hIrDecoder, &u8Code, &u16Addr)){
+            char buf[64];
             GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
-            sprintf(buf, "STM8 IrRC %d %d", u16Addr, (uint16_t)u8Code);
+            sprintf(buf, "[%u]STM8 IrRC %d %d", count, u16Addr, (uint16_t)u8Code);
             uart_log(buf);
         }
+
+        while(UART2_GetFlagStatus(UART2_FLAG_TC) == RESET);
+
+        if(count % 100 == 0)
+            GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
+        
+        count++;
+        wfi();
     }
 }
