@@ -18,7 +18,7 @@ lib_cxstm8 = $(DEV_TOOLS_PATH)\COSMIC\FSE_Compilers\CXSTM8\Lib
 src_driver = ..\STM8S_StdPeriph_Driver\src
 src_ext = ..\STM8_Ext\src
 
-cflags = +mods0 -pxp -pp -l -dSTM8S105 -i$(inc_cxstm8) -i$(inc_stm8s_stdperiph_lib) -i$(inc_ext)
+cflags = +mods0 -pxp -pp -l -dSTM8S105 -dHSE_Value -i$(inc_cxstm8) -i$(inc_stm8s_stdperiph_lib) -i$(inc_ext)
 linkflags = -l$(lib_cxstm8)
 
 !IFNDEF DEBUG

@@ -1,13 +1,8 @@
 #include "ext_ir_decoder.h"
 #include <stdlib.h>
-
-#define _EXT_IR_MAX_CAPTURE     192
-
-typedef struct _ext_ir_decoder_data
-{
-    uint8_t u8Len;
-    uint16_t u16Capture[_EXT_IR_MAX_CAPTURE];
-} ex_ir_decoder_data_t;
+#include "ext_ir_defs.h"
+#include "ext_ir_nec.h"
+#include "ext_ir_sony.h"
 
 ext_ir_decoder_handler_t ext_ir_decoder_init(void)
 {
@@ -30,9 +25,12 @@ uint8_t ext_ir_decoder_get_len(ext_ir_decoder_handler_t hIrDecoder)
 uint8_t ext_ir_decoder_append(ext_ir_decoder_handler_t hIrDecoder, uint16_t u16Capture)
 {
     ex_ir_decoder_data_t *pdata = hIrDecoder;
+
     if(pdata->u8Len < _EXT_IR_MAX_CAPTURE){
-        pdata->u16Capture[pdata->u8Len] = u16Capture;
-        pdata->u8Len++;
+        if(u16Capture != 0 || pdata->u8Len != 0){
+            pdata->u16Capture[pdata->u8Len] = u16Capture;
+            pdata->u8Len++;
+        }
     }
 }
 
@@ -42,14 +40,23 @@ void ext_ir_decoder_clear(ext_ir_decoder_handler_t hIrDecoder)
     pdata->u8Len = 0;
 }
 
-uint8_t ext_ir_decoder_decode(ext_ir_decoder_handler_t hIrDecoder)
+bool ext_ir_decoder_decode(ext_ir_decoder_handler_t hIrDecoder, uint8_t *pu8Code, uint16_t *pu16Addr)
 {
-    uint8_t u8Code = 0;
+    bool bOK = FALSE;
     ex_ir_decoder_data_t *pdata = hIrDecoder;
+
     if(pdata->u8Len > 0){
-        // TODO: decode
-        u8Code = pdata->u8Len;
-        pdata->u8Len = 0;
+        if(pdata->u16Capture[0] > 5000){
+            // NEC
+            bOK = decode_nec(pu8Code, pu16Addr, pdata);
+        }
+        else if(pdata->u16Capture[0] > 2000){
+            // SONY
+            bOK = decode_sony(pu8Code, pu16Addr, pdata);
+        }
+        else{
+            pdata->u8Len = 0;
+        }
     }
-    return u8Code;
+    return bOK;
 }

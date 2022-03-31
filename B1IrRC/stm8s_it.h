@@ -5,8 +5,10 @@
 
 #ifdef __INTELLISENSE__
 void EXTI2_IRQHandler(void);
+void TIM3_IRQHandler(void);
 #else
 @far @interrupt void EXTI2_IRQHandler(void);
+@far @interrupt void TIM3_IRQHandler(void);
 #endif
 
 #endif

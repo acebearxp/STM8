@@ -1,17 +1,14 @@
-// HSE@8.000MHz
-#define HSE_VALUE ((uint32_t)8000000)
-#define HSE_Value HSE_VALUE
-
 #include <stm8s.h>
 #include "risym.h"
 #include <stdio.h>
+#include "uart_log.h"
 
 TOPMOST_DATA_T g_data;
 
 static void CLOCK_setup(void)
 {
     CLK_HSECmd(ENABLE); // HSE@8.000MHz
-    CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV4); // 2MHz
+    CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV4); // CPU@2MHz
     CLK_ClockSwitchConfig(CLK_SWITCHMODE_AUTO, CLK_SOURCE_HSE, DISABLE, CLK_CURRENTCLOCKSTATE_DISABLE);
 }
 
@@ -33,7 +30,9 @@ static void GPIO_setup(void)
 static void TIM3_setup(void)
 {
     CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER3, ENABLE);
-    TIM3_TimeBaseInit(TIM3_PRESCALER_8, 0xFFFF); // 1MHz
+    // 12000 is safe enough, for the longest interval between pulses is 9ms(9000)
+    TIM3_TimeBaseInit(TIM3_PRESCALER_8, 12000); // 1MHz
+    TIM3_ITConfig(TIM3_IT_UPDATE, ENABLE);
     TIM3_Cmd(ENABLE);
 }
 
@@ -54,6 +53,8 @@ static void IrDecoder_setup(void)
 
 void main()
 {
+    char buf[256];
+
     CLOCK_setup();
     IrDecoder_setup();
     GPIO_setup();
@@ -62,25 +63,16 @@ void main()
     
     enableInterrupts();
 
+    uart_log("start...");
+
     while(TRUE){
-        uint8_t buf[256];
-        int nLen, nSent, nWait;
-        uint8_t u8Code = ext_ir_decoder_decode(g_data.hIrDecoder);
-        if(u8Code > 0){
+        uint8_t u8Code;
+        uint16_t u16Addr;
+
+        if(ext_ir_decoder_decode(g_data.hIrDecoder, &u8Code, &u16Addr)){
             GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
-            nLen = sprintf(buf, "STM8 IrRC Recvied %u", u8Code);
-            nSent = 0, nWait = 0;
-            while(nSent <= nLen+1){
-                if(UART2_GetFlagStatus(UART2_FLAG_TXE) == SET){
-                    UART2_SendData8(buf[nSent]);
-                    nSent++;
-                    nWait = 0;
-                }
-                else{
-                    if(nWait > 10000) break;
-                    nWait++;
-                }
-            }
+            sprintf(buf, "STM8 IrRC %d %d", u16Addr, (uint16_t)u8Code);
+            uart_log(buf);
         }
     }
 }

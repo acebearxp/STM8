@@ -21,6 +21,7 @@
 
 typedef struct _TOPMOST_DATA
 {
+    uint8_t u8TIM3Overflow;
     ext_ir_decoder_handler_t hIrDecoder;
 } TOPMOST_DATA_T;
 
