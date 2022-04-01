@@ -47,9 +47,7 @@ bool decode_nec(uint8_t *pu8Code, uint16_t *pu16AddrCode, ex_ir_decoder_data_t *
             *pu16AddrCode = u8Code[0];
         }
         else{
-            *pu16AddrCode = u8Code[1];
-            *pu16AddrCode << 8;
-            *pu16AddrCode |= u8Code[0];
+            *pu16AddrCode = (u8Code[1] << 8) | u8Code[0];
         }
         
         *pu8Code = u8Code[2];

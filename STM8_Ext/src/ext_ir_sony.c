@@ -53,9 +53,7 @@ bool decode_sony(uint8_t *pu8Code, uint16_t *pu16AddrCode, ex_ir_decoder_data_t 
         u8Code[2] = decode_range(pdata->u16Capture, 26, 16);
         
         *pu8Code = u8Code[0];
-        *pu16AddrCode = u8Code[2];
-        *pu16AddrCode << 8;
-        *pu16AddrCode |= u8Code[1];
+        *pu16AddrCode = (u8Code[2] << 8)|u8Code[1];
         pdata->u8Len = 0;
         return TRUE;
     }

@@ -71,8 +71,15 @@ void main()
 
         if(ext_ir_decoder_decode(g_data.hIrDecoder, &u8Code, &u16Addr)){
             char buf[64];
+            const uint8_t lenX12 = 6;
             GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
-            sprintf(buf, "[%u]STM8 IrRC %d %d", count, u16Addr, (uint16_t)u8Code);
+            buf[0] = 0x12;
+            buf[1] = lenX12;
+            buf[2] = (uint8_t)(u16Addr>>8);
+            buf[3] = (uint8_t)u16Addr;
+            buf[4] = u8Code;
+            buf[5] = 0x12;
+            sprintf(buf+lenX12, "[%u]STM8 IrRC %d %d", count, u16Addr, (uint16_t)u8Code);
             uart_log(buf);
         }
 
