@@ -34,6 +34,7 @@ static void TIM3_setup(void)
     TIM3_TimeBaseInit(TIM3_PRESCALER_8, 12000); // 1MHz
     TIM3_ITConfig(TIM3_IT_UPDATE, ENABLE);
     TIM3_Cmd(ENABLE);
+    g_data.u8TIM3Overflow = 1;
 }
 
 static void UART2_setup(void)
@@ -72,6 +73,10 @@ void main()
         if(ext_ir_decoder_decode(g_data.hIrDecoder, &u8Code, &u16Addr)){
             char buf[64];
             const uint8_t lenX12 = 6;
+            size_t len;
+            
+            uart_log("STM8");
+
             GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
             buf[0] = 0x12;
             buf[1] = lenX12;
@@ -79,15 +84,13 @@ void main()
             buf[3] = (uint8_t)u16Addr;
             buf[4] = u8Code;
             buf[5] = 0x12;
-            sprintf(buf+lenX12, "[%u]STM8 IrRC %d %d", count, u16Addr, (uint16_t)u8Code);
-            uart_log(buf);
+            len = sprintf(buf+lenX12, "[%u]STM8 IrRC %d %d", count, u16Addr, (uint16_t)u8Code);
+            uart_send(buf, lenX12+len+1);
         }
 
         while(UART2_GetFlagStatus(UART2_FLAG_TC) == RESET);
-
-        if(count % 100 == 0)
-            GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
         
+        GPIO_WriteHigh(LED_GPIO_PORT, LED_GPIO_PIN);
         count++;
         wfi();
     }
