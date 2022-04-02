@@ -1,6 +1,7 @@
 #include <stm8s.h>
 #include "risym.h"
 #include <stdio.h>
+#include "ext_unique_id.h"
 #include "ext_uart.h"
 
 #define BUF_MAX_SIZE    (64)
@@ -48,6 +49,7 @@ void main()
 {
     uint16_t count = 0;
     char buf[BUF_MAX_SIZE];
+    char id[20];
 
     CLOCK_setup();
     IrDecoder_setup();
@@ -57,7 +59,8 @@ void main()
     
     enableInterrupts();
 
-    ext_uart_log(buf, BUF_MAX_SIZE, "STM8S105K4 start...");
+    ext_unique_id_readstr(id);
+    ext_uart_log(buf, BUF_MAX_SIZE, "STM8S105K4 %s start...", id);
 
     while(TRUE){
         uint8_t u8Code;
