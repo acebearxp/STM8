@@ -1,7 +1,9 @@
 #include <stm8s.h>
 #include "risym.h"
 #include <stdio.h>
-#include "uart_log.h"
+#include "ext_uart.h"
+
+#define BUF_MAX_SIZE    (64)
 
 TOPMOST_DATA_T g_data;
 
@@ -37,16 +39,6 @@ static void TIM3_setup(void)
     g_data.u8TIM3Overflow = 1;
 }
 
-static void UART2_setup(void)
-{
-    // the baudrate should no more than 8MHz/16 since master clock is at 8MHz(usually 460800 max)
-    CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART2, ENABLE);
-    UART2_DeInit();
-    UART2_Init(115200, UART2_WORDLENGTH_8D, UART2_STOPBITS_1,
-        UART2_PARITY_NO, UART2_SYNCMODE_CLOCK_DISABLE, UART2_MODE_TXRX_ENABLE);
-    UART2_Cmd(ENABLE);
-}
-
 static void IrDecoder_setup(void)
 {
     g_data.hIrDecoder = ext_ir_decoder_init();
@@ -55,16 +47,17 @@ static void IrDecoder_setup(void)
 void main()
 {
     uint16_t count = 0;
+    char buf[BUF_MAX_SIZE];
 
     CLOCK_setup();
     IrDecoder_setup();
     GPIO_setup();
     TIM3_setup();
-    UART2_setup();
+    ext_uart_init(115200);
     
     enableInterrupts();
 
-    uart_log("STM8S105K4 start...");
+    ext_uart_log(buf, BUF_MAX_SIZE, "STM8S105K4 start...");
 
     while(TRUE){
         uint8_t u8Code;
@@ -74,8 +67,6 @@ void main()
             char buf[64];
             const uint8_t lenX12 = 6;
             size_t len;
-            
-            uart_log("STM8");
 
             GPIO_WriteReverse(LED_GPIO_PORT, LED_GPIO_PIN);
             buf[0] = 0x12;
@@ -85,7 +76,7 @@ void main()
             buf[4] = u8Code;
             buf[5] = 0x12;
             len = sprintf(buf+lenX12, "[%u]STM8 IrRC %d %d", count, u16Addr, (uint16_t)u8Code);
-            uart_send(buf, lenX12+len+1);
+            ext_uart_send(buf, lenX12+len+1);
         }
 
         while(UART2_GetFlagStatus(UART2_FLAG_TC) == RESET);
