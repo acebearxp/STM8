@@ -8,7 +8,6 @@ bit0 -1-1
 bit1 -1+3
 */
 #include <stdio.h>
-#include "uart_log.h"
 
 static bool decode(uint16_t u16d0, uint16_t u16d1)
 {

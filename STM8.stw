@@ -10,7 +10,12 @@ Dependencies=
 [Project1]
 Filename=B1IrRC\B1IrRC.stp
 Dependencies=
+
+[Project2]
+Filename=B2IrGO\B2IrGO.stp
+Dependencies=
+
 [Options]
-ActiveProject=B1IrRC
+ActiveProject=B2IrGO
 ActiveConfig=Debug
 AddSortedElements=0
