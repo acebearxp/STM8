@@ -32,6 +32,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm8s.h"
 
+// The dev-board has a HSE@8MHz
+#define HSE_VALUE ((uint32_t)8000000)
+
 /* Uncomment the line below to enable peripheral header file inclusion */
 #if defined(STM8S105) || defined(STM8S005) || defined(STM8S103) || defined(STM8S003) ||\
     defined(STM8S001) || defined(STM8S903) || defined (STM8AF626x)
