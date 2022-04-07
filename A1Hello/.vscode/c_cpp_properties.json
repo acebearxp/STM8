@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "STM8",
+            "includePath": [
+                "${default}",
+                "${workspaceFolder}/../STM8_Ext/inc",
+                "${workspaceFolder}/../STM8_Ext/src",
+                "${workspaceFolder}/../STM8S_StdPeriph_Driver/inc"
+            ],
+            "defines": [
+                "STM8S105",
+                "_COSMIC_",
+                "__CSMC__"
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/../STM8_Ext/src",
+                    "${workspaceFolder}/../STM8S_StdPeriph_Driver/src"
+                ]
+            }
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "process",
+			"label": "Build-A1Hello",
+			"command": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.31.31103/bin/Hostx64/x64/nmake.exe",
+			"args": [
+				"DEBUG=1"
+			],
+			"group": "build",
+			"detail": "STM8 build with cxstm8",
+			"problemMatcher": []
+		}
+	]
+}
